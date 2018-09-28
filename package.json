@@ -1,0 +1,9 @@
+{
+	"name":"Content Vue",
+	"description":"A vuejs based content manager. ",
+	"version":"1.0.0",
+	"url":"gilacms.com",
+	"require": {
+		"core": "1.7.6"
+	}
+}
