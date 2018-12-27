@@ -1,5 +1,6 @@
 
-
+//<div v-html="edit_html"></div>\
+                
 Vue.component('pnk-vue', {
     template: '<div class="pnk-table">\
         <div v-if="edititem==0" class="pnk-table-head">\
@@ -111,7 +112,7 @@ Vue.component('pnk-vue', {
             let _data = this.data
             this.page=page
             if(typeof this.filters=='undefined') this.filters=''
-            g.get('cm/list_rows/'+this.name+'?page='+page+this.filters,function(data){
+            g.get('cm/list_rows/'+this.name+'?page='+page+'&search'+this.search+this.filters,function(data){
                 data = JSON.parse(data)
                 _data.rows=data.rows
                 _data.totalRows=data.totalRows
@@ -229,7 +230,7 @@ pnk_command['edit'] = {
         _this.edit_html = "Loading..."
         g.get('cm/edit_form/'+_this.name+'?id='+irow,function(data){
             _this.edit_html = data
-            edit_item_app.$forceUpdate()
+            //edit_item_app.$forceUpdate()
         })
     }
 }

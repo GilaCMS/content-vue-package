@@ -124,6 +124,13 @@ g.dialog.buttons.select_path_post = {
         g('#media_dialog').parent().remove();
     }
 }
+g.dialog.buttons.select_row_source = {
+    title:'Select', fn: function() {
+        let v = g('#selected-row').attr('value')
+        if(v!=null) g(input_select_row).attr('value', v);
+        g('#select_row_dialog').parent().remove();
+    }
+}
 function open_gallery() {
     g.post("admin/media","g_response=content&path=assets",function(gal){
         g.dialog({title:"Media gallery",body:gal,buttons:'select_path',type:'modal',class:'large',id:'media_dialog'})
@@ -134,5 +141,23 @@ function open_gallery_post() {
         g.dialog({title:"Media gallery",body:gal,buttons:'select_path_post',type:'modal',class:'large',id:'media_dialog'})
     })
 }
+function open_select_from_table(t) {
+    g.post("admin/content/"+t,"g_response=content",function(gal){ 
+        g.dialog({title:"Media gallery",body:gal,buttons:'select_path_post',type:'modal',class:'large',id:'media_dialog'})
+    })
+}
+function open_select_row(mpi,table) {
+    input_select_row = mpi;
+    g.post("cm/select_row/"+table,"g_response=content&path=assets",function(gal){
+        g.dialog({title:__m('_gallery'),body:gal,buttons:'select_row_source',type:'modal',id:'select_row_dialog',class:'large'})
+    })
+}
+
+g.click(".select-row",function(){
+   g('.select-row').removeClass('g-selected');
+   g(this).addClass('g-selected');
+   g('#selected-row').attr('value',this.getAttribute('data-id'))
+})
+
 
 </script>

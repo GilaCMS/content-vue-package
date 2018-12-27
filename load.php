@@ -1,5 +1,12 @@
 <?php
 
+gila::contentInit('page', function(&$table) {
+	unset($table['fields']['commands']);
+});
+gila::contentInit('post', function(&$table) {
+	unset($table['fields']['commands']);
+});
+
 gila::action('admin','content',function(){
 	$type = router::get('type',1);
 	if(!isset(gila::$content[$type])) {
@@ -40,8 +47,23 @@ gila::action('cm','empty_form',function(){
 	echo gForm::html($pnk->getFields('create'),$pnk->getEmpty());
 });
 
-gila::route('path',function(){
-	echo var_export($_POST);
-	echo json_encode($_POST,JSON_PRETTY_PRINT);
+gila::action('cm','select_row',function(){
+    global $db;
+    $pnk = new gTable(router::get("t",1));
+    $fields = $pnk->fields();
+    $ql = "SELECT {$pnk->select($fields)} FROM {$pnk->name()}{$pnk->where($_GET)} LIMIT 5;";
+    $res = $db->query($ql);
+    $thead = '';
+    $html = '';
+    while($r = mysqli_fetch_row($res)) {
+        if($thead=='') $thead='<tr><th>'.implode('<th>',$pnk->getTable()['tool']['addfrom'][1]);
+        $html .= '<tr class="select-row" data-id="'.$r[0].'"><td>'.implode('<td>',$r);
+    }
+    $totalRows = $db->value("SELECT COUNT(*) FROM {$pnk->name()}{$pnk->where($_GET)};");
+    echo '<input placeholder="search"><input id="selected-row" value=""><table class="g-table">'.$thead.$html.'</table>'.$totalRows.' results found';
+});
+
+gila::route('widgets',function(){
+	view::render("widgets.php","content-vue");
 	exit;
 });
